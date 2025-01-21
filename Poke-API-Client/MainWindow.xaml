@@ -1,0 +1,316 @@
+<Window
+    x:Class="Poke_API_Client.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Poke_API_Client"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:localData="using:Poke_API_Client.Data.Classes"
+    xmlns:localData2="using:Poke_API_Client.Data.Classes.Evolution_Chain"
+
+    mc:Ignorable="d">
+
+    <Grid Background="#FFDEAA21">
+
+        <!-- Outer Frame -->
+        <Grid
+             BorderBrush="#FFDEAA21"
+            BorderThickness="10"
+            CornerRadius="20"
+            x:Name ="MainscreenGrid">
+
+            <Grid.Background>
+                <ImageBrush Opacity="0.8" 
+                         ImageSource="https://images.hdqwalls.com/download/pokeball-abstract-ro-3840x2160.jpg"/>
+            </Grid.Background>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="0.09*"/>
+                <ColumnDefinition Width="0.09*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBox
+                x:Name="SearchBar"
+                Grid.Column="0" 
+                PlaceholderText="search on Name or ID..." 
+                PlaceholderForeground="Black" 
+                Background="WhiteSmoke"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                MinWidth="180"
+                Margin="20,0,0,0"
+                TextChanged="SearchBar_TextChanged"/>
+
+            <!-- Centered ListView -->
+            <ListView
+                x:Name="PokeList"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                Padding="10"
+                Background="#76fff7e8"
+                ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                IsItemClickEnabled="True"
+                ItemClick="PokeList_ItemClick"
+                MinWidth="100"
+                Grid.ColumnSpan="2">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="localData:Pokemon">
+                        <Border
+                            Background="#FFD4E157"
+                            CornerRadius="10"
+                            Margin="5"
+                            Padding="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.4*"/>
+                                    <ColumnDefinition Width="0.4 *"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Image
+                                    Source="{x:Bind ImageURL}" 
+                                    Grid.Column="0"
+                                    MaxWidth="100"
+                                    MaxHeight="90"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch"/>
+
+                                <TextBlock
+                                    Text="{x:Bind URLId}"
+                                    FontSize="18"
+                                    FontWeight="Bold"
+                                    Foreground="#FF1E88E5"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+
+                                <TextBlock
+                                    Text="{x:Bind CapitalizedName}"
+                                    FontSize="18"
+                                    Foreground="#FF000000"
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="10,0,0,0"
+                                    MaxWidth="200"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Grid x:Name="PokeDetails"  Visibility="Collapsed" Grid.Column="2" Padding="20" Background="#FFF3E5B8" BorderBrush="#FFD4E157" BorderThickness="1" CornerRadius="15">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="0.1*"/>
+                    <RowDefinition Height="0.4*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="0.2*"/>
+                </Grid.RowDefinitions>
+
+
+                <!-- Pokémon Name -->
+                <TextBlock
+                    x:Name="pokemonName"
+                    Grid.Row="0"
+                    FontSize="22"
+                    FontWeight="Bold"
+                    Foreground="#306"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    MaxWidth="500"
+                />
+
+                <!-- Pokémon Name -->
+                <TextBlock
+                    x:Name="nextEvolution"
+                    Grid.Row="1"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    Foreground="#306"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    MaxWidth="500"
+                />  
+
+                <!-- Pokémon Image -->
+                <Image
+                    x:Name="pokemonImage"
+                    Grid.Row="2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    MaxWidth="200"
+                    MaxHeight="200"
+                    Margin="0,10,0,10"
+                />
+
+                <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto">
+                    <Grid FlowDirection="LeftToRight">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" HorizontalAlignment="Center" ColumnSpacing="10">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                x:Name="HeightText"              
+                                Grid.Column="0"
+                                HorizontalAlignment="Stretch"
+                                MaxWidth="200"
+                            />
+
+                            <TextBlock
+                                x:Name="WeightText"              
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                MaxWidth="200"
+                            />
+                        </Grid>
+
+                        <TextBlock 
+                            Text="Types:"
+                            Grid.Row="1"
+                            HorizontalAlignment="Center"
+                            Margin="0,20,0,0"
+                        />
+                        <!-- Types List -->
+                        <ListView 
+                            x:Name="typesList" 
+                            Grid.Row="2"
+                            Margin="0,0,0,20" 
+                            Background="#b2ffffcc" 
+                            IsItemClickEnabled="False" 
+                            HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Top"
+                            MaxWidth="270">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="localData:TypeInfo">
+                                    <Grid Margin="5">
+                                        <TextBlock 
+                                            Text="{x:Bind Name}" 
+                                            FontSize="16" 
+                                            Foreground="#FF000000" 
+                                            HorizontalAlignment="Stretch"
+                                        />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <TextBlock 
+                            Text="Abilities:" 
+                            Grid.Row="3"
+                            HorizontalAlignment="Center"
+                        />
+
+                        <ListView 
+                            x:Name="abilitiesList"
+                            Grid.Row="4"
+                            Background="#b2ffffcc"
+                            MaxHeight="200"
+                            MaxWidth="270"
+                            Margin="0,0,0,20">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="localData:AbilityInfo">
+                                    <TextBlock
+                                        Text="{x:Bind Name}"
+                                    />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <TextBlock 
+                            Text="Moves:" 
+                            Grid.Row="5"
+                            HorizontalAlignment="Center"
+                        />
+
+                        <ListView 
+                            x:Name="movesList"
+                            Grid.Row="6"
+                            Background="#b2ffffcc"
+                            MaxHeight="200"
+                            MaxWidth="270">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="localData:MoveInfo">
+                                    <TextBlock
+                                        Text="{x:Bind Name}"
+                                    />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <Grid Grid.Row="7" HorizontalAlignment="Center" ColumnSpacing="10" Margin="0,20,0,20">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                x:Name="CaptureRate"
+                                Grid.Column="0"
+                                Grid.Row="0"
+                            
+                            />
+
+                            <TextBlock
+                                x:Name="BaseHappiness"
+                                Grid.Column="1"
+    
+                            />
+                        </Grid>
+                        <TextBlock
+                            x:Name="habitatLabel"
+                            Text="Habitat:"
+                            Grid.Row="8"
+                            HorizontalAlignment="Center"
+                        />
+
+                        <TextBlock
+                            x:Name="HabitatInfo"
+                            Grid.Row="9"
+                            HorizontalAlignment="Center"
+                            Margin="0,30,0,0"    
+                        />
+                    </Grid>
+                </ScrollViewer>
+
+                <!-- Close Button -->
+                <Button
+                    x:Name="CloseButton"
+                    Grid.Row="4 "
+                    Content="Close"
+                    FontSize="16"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Margin="0,10,0,0"
+                    Padding="10,5"
+                    Background="#FF1E88E5"
+                    Foreground="White"
+                    BorderBrush="#FF1E88E5"
+                    BorderThickness="1"
+                    Click="CloseButton_Click"
+                />
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

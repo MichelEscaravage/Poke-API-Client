@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Poke-API-Client (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Poke-API-Client (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
