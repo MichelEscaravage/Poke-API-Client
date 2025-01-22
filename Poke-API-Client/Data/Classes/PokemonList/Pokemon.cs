@@ -16,7 +16,8 @@ namespace Poke_API_Client.Data.Classes
         public string URLId => $"#{Id}";
 
         public string ImageURL => Id < 649
-            ? $"https://img.pokemondb.net/sprites/black-white/anim/normal/{Name}.gif"
-            : $"https://img.pokemondb.net/sprites/x-y/normal/{Name}.png";
+           ? $"https://img.pokemondb.net/sprites/black-white/anim/normal/{Name}.gif"
+           : $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{Id}.png";
     }
+
 }

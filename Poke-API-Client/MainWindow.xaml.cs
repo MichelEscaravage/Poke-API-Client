@@ -111,9 +111,9 @@ namespace Poke_API_Client
             }
 
             BitmapImage bitmapImage;
-            if (selectedPokemon.Id > 649)
+            if (selectedPokemon.Id > 721)
             {
-                bitmapImage = new BitmapImage(new Uri($"https://img.pokemondb.net/sprites/x-y/normal/{selectedPokemon.Name}.png"));
+                bitmapImage = new BitmapImage(new Uri($"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{selectedPokemon.Id}.png"));
             }
             else
             {
