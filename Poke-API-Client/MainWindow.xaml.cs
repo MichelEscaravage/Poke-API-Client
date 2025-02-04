@@ -22,7 +22,12 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Core;
+using Windows.Media.Playback;
 using WinRT;
+/*using NAudio.Wave;
+using NVorbis;*/
+
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -46,7 +51,7 @@ namespace Poke_API_Client
         public async Task LoadData()
         {
             var client = new HttpClient();
-            var response = await client.GetAsync("https://pokeapi.co/api/v2/pokemon?limit=2000");
+            var response = await client.GetAsync("https://pokeapi.co/api/v2/pokemon?limit=20000");
             var content = await response.Content.ReadAsStringAsync();
 
             var options = new JsonSerializerOptions()
@@ -78,16 +83,14 @@ namespace Poke_API_Client
         private async Task LoadSelectedData(int pokemonId, Pokemon selectedPokemon)
         {
             nextEvolution.Text = " ";
-            
+            Task<HttpResponseMessage> task2;
             var client = new HttpClient();
 
             var task1 = client.GetAsync($"https://pokeapi.co/api/v2/pokemon/{pokemonId}/");
-            var task2 = client.GetAsync($"https://pokeapi.co/api/v2/pokemon-species/{pokemonId}/");
 
-            var responses = await Task.WhenAll(task1, task2);
+            var result1 = await task1;
 
-            var content1 = await responses[0].Content.ReadAsStringAsync();
-            var content2 = await responses[1].Content.ReadAsStringAsync();
+            var content1 = await result1.Content.ReadAsStringAsync();
 
             var options = new JsonSerializerOptions()
             {
@@ -95,6 +98,23 @@ namespace Poke_API_Client
             };
 
             var pokemonDetail = JsonSerializer.Deserialize<PokemonDetail>(content1, options);
+
+            // TASK 2 -------------------------------------------------------------------
+            var tryTask2 = client.GetAsync($"https://pokeapi.co/api/v2/pokemon-species/{pokemonId}/");
+
+            if (tryTask2.Result.IsSuccessStatusCode)
+            {
+                task2 = tryTask2;
+            }
+            else
+            {
+                task2 = client.GetAsync($"{pokemonDetail.species.Url}");
+            }
+
+            var result2 = await task2;
+
+            var content2 = await result2.Content.ReadAsStringAsync();
+
             var speciesDetail = JsonSerializer.Deserialize<SpeciesDetail>(content2, options);
 
             var response = await client.GetAsync(speciesDetail.evolution_chain.url);
@@ -111,7 +131,13 @@ namespace Poke_API_Client
             }
 
             BitmapImage bitmapImage;
-            if (selectedPokemon.Id > 721)
+
+            if (selectedPokemon.Name == "eevee-starter" || selectedPokemon.Name == "pikachu-starter")
+            {
+                string baseName = selectedPokemon.Name.Split("-")[0];
+                bitmapImage = new BitmapImage(new Uri($"https://img.pokemondb.net/sprites/home/normal/{baseName}-f.png"));
+            }
+            else if (selectedPokemon.Id > 721)
             {
                 bitmapImage = new BitmapImage(new Uri($"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{selectedPokemon.Id}.png"));
             }
@@ -119,6 +145,7 @@ namespace Poke_API_Client
             {
                 bitmapImage = new BitmapImage(new Uri($"https://img.pokemondb.net/sprites/black-white/anim/normal/{selectedPokemon.Name}.gif"));
             }
+            
 
             var typeInfoList = pokemonDetail.Types.Select(type => new TypeInfo { Name = type.Type.Name }).ToList();
             var moveInfoList = pokemonDetail.Moves.Select(move => new MoveInfo { Name = move.Move.Name }).ToList();
@@ -169,7 +196,6 @@ namespace Poke_API_Client
             CaptureRate.Text = $"Capture Rate: {capture_Rate}";
             BaseHappiness.Text = $"Base Happiness: {base_Happiness}";
         }
-
 
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
         {

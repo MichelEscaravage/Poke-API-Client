@@ -17,6 +17,6 @@ namespace Poke_API_Client.Data.Classes
         public List<MoveList> Moves { get; set; }
         public float Height { get; set; }
         public float Weight { get; set; }
-
+        public Species species { get; set; }
     }
 }

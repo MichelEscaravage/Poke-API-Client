@@ -14,6 +14,7 @@ namespace Poke_API_Client.Data.Classes.SpeciesDetails
         public Habitat Habitat {get; set; }
         public Species_Evolution_Chain evolution_chain { get; set; }
         
+        
 
     }
 }
