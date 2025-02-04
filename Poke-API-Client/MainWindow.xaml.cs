@@ -25,8 +25,6 @@ using Windows.Foundation.Collections;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using WinRT;
-/*using NAudio.Wave;
-using NVorbis;*/
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -99,7 +97,6 @@ namespace Poke_API_Client
 
             var pokemonDetail = JsonSerializer.Deserialize<PokemonDetail>(content1, options);
 
-            // TASK 2 -------------------------------------------------------------------
             var tryTask2 = client.GetAsync($"https://pokeapi.co/api/v2/pokemon-species/{pokemonId}/");
 
             if (tryTask2.Result.IsSuccessStatusCode)
